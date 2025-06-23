@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments.html :: headers}"></th:block>
+    <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+<div th:replace="~{fragments.html :: logo}"></div>
+<div th:replace="~{fragments.html :: menu}"></div>
+<div id="content">
+    <table th:if="${cart.size() != 0}">
+        <thead>
+            <tr>
+                <th class="title">Tytuł</th>
+                <th class="author">Autor</th>
+                <th class="quantity">Ilość</th>
+                <th class="price">Cena j.</th>
+                <th class="sum">Suma</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="position : ${cart}">
+                <td th:text="${position.title}" class="title"></td>
+                <td th:text="${position.author}" class="author"></td>
+                <td th:text="${position.quantity}" class="quantity"></td>
+                <td th:text="${#numbers.formatDecimal(position.price, 2, 2, 'POINT') + ' zł'}" class="price"></td>
+                <td th:text="${#numbers.formatDecimal(position.getSum(), 2, 2, 'POINT') + ' zł'}" class="sum"></td>
+            </tr>
+        <tr>
+            <td style="border: 0px !important"></td>
+            <td style="border: 0px !important"></td>
+            <td></td>
+            <td>Suma:</td>
+            <td th:text="${#numbers.formatDecimal(cartSum, 2, 2, 'POINT') + ' zł'}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${cart.size() == 0}">Koszyk jest pusty !!</div>
+    <a th:if="${cart.size() != 0}" href="/order" class="button">Zamów</a>
+</div>
+</body>
+</html>

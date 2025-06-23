@@ -1,0 +1,29 @@
+.big-row {
+    width: 100%;
+    border: 2px solid #29A6A8;
+    border-radius: 10px;
+}
+
+.id {
+    width: 15%;
+}
+
+.date {
+    width: 33%;
+}
+
+.price {
+    width: 33%;
+}
+
+.quantity {
+    width: 15%;
+}
+
+.details {
+    display: none;
+}
+
+.address {
+    font-size: 30px;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments.html :: headers}"></th:block>
+    <link rel="stylesheet" href="orders.css">
+    <script src="orders.js"></script>
+</head>
+<body>
+<div th:replace="~{fragments.html :: logo}"></div>
+<div th:replace="~{fragments.html :: menu}"></div>
+<div id="content">
+    <div class="big-row">
+        <div class="id">Id</div>
+        <div class="date">Data</div>
+        <div class="price">Cena</div>
+        <div class="quantity">Ilość</div>
+    </div>
+    <th:block th:each="order : ${orders}">
+        <div class="big-row" onclick="showDetails(event)">
+            <div th:text="${order.id}" class="id"></div>
+            <div th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}" class="date"></div>
+            <div th:text="${#numbers.formatDecimal(order.price, 2, 2, 'POINT') + ' zł'}" class="price"></div>
+            <div th:text="${order.positions.size()}" class="quantity"></div>
+            <div class="details">
+                <div th:text="${order.addressLine()}" class="address"></div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th class="id">Tytuł</th>
+                        <th class="date">Autor</th>
+                        <th class="price">Cena j.</th>
+                        <th class="quantity">Ilość</th>
+                        <th>Suma</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="position : ${order.positions}">
+                        <td th:text="${position.title}"></td>
+                        <td th:text="${position.author}"></td>
+                        <td th:text="${position.price}"></td>
+                        <td th:text="${position.quantity}"></td>
+                        <th th:text="${position.sum()}"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    </tbody>
+    </table>
+    <!--<div th:if="${cart.size() == 0}">Koszyk jest pusty !!</div>-->
+</div>
+</body>
+</html>

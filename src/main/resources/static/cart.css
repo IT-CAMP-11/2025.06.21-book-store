@@ -1,0 +1,32 @@
+#content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#content table thead tr {
+    border-bottom: 1px solid #29A6A8;
+}
+
+#content table tbody tr td:not(:last-child), #content table thead tr th:not(:last-child) {
+    border-right: 1px solid #29A6A8;
+}
+
+.title {
+    width: 40%;
+}
+
+.author {
+    width: 30%;
+}
+
+.quantity {
+    width: 5%;
+}
+
+.price {
+    width: 10%;
+}
+
+.sum {
+    width: 10%;
+}

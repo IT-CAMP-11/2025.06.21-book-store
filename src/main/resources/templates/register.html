@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments.html :: headers}"></th:block>
+</head>
+<body>
+<div th:replace="~{fragments.html :: logo}"></div>
+<div th:replace="~{fragments.html :: menu}"></div>
+<div id="content">
+    <form method="post">
+        <input class="text-field" type="text" placeholder="Login" th:field="*{userObject.login}">
+        <input class="text-field" type="password" placeholder="Hasło" th:field="*{userObject.password}">
+        <input class="text-field" type="password" placeholder="Powtórz hasło" name="password2">
+        <input class="text-field" type="text" placeholder="Imie" th:field="*{userObject.name}">
+        <input class="text-field" type="text" placeholder="Nazwisko" th:field="*{userObject.surname}">
+        <input class="text-field" type="text" placeholder="Wiek" th:field="*{userObject.age}">
+        <input class="button" type="submit" value="Zarejestruj">
+    </form>
+</div>
+</body>
+</html>

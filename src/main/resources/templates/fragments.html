@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<div id="menu" th:fragment="menu">
+    <a class="button" href="/main">Strona główna</a>
+    <a class="button" href="/contact">Kontakt</a>
+    <a th:if="${session.user != null}" class="button" href="/cart">Koszyk</a>
+    <a th:if="${session.user != null}" class="button" href="/orders">Zamówienia</a>
+    <a th:if="${session.user == null}" class="button" href="/login">Zaloguj</a>
+    <a th:if="${session.user != null}" class="button" href="/logout">Wyloguj</a>
+</div>
+
+<img src="/logo.png" id="logo" th:fragment="logo">
+
+<th:block th:fragment="headers">
+    <meta charset="UTF-8">
+    <title>Super księgarnia TI-CAMP</title>
+    <link rel="stylesheet" href="commons.css">
+</th:block>
+
+
+</html>
