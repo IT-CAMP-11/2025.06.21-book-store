@@ -7,6 +7,7 @@
     <a th:if="${session.user != null}" class="button" href="/cart">Koszyk</a>
     <a th:if="${session.user != null}" class="button" href="/orders">Zamówienia</a>
     <a th:if="${session.user == null}" class="button" href="/login">Zaloguj</a>
+    <a th:if="${session.user != null and session.user.role.name() == 'ADMIN'}" class="button" href="/addBook">Dodaj książkę</a>
     <a th:if="${session.user != null}" class="button" href="/logout">Wyloguj</a>
 </div>
 
@@ -15,7 +16,7 @@
 <th:block th:fragment="headers">
     <meta charset="UTF-8">
     <title>Super księgarnia TI-CAMP</title>
-    <link rel="stylesheet" href="commons.css">
+    <link rel="stylesheet" href="/commons.css">
 </th:block>
 
 

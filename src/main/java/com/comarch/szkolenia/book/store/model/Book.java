@@ -13,6 +13,6 @@ public class Book {
     private String title;
     private String author;
     private String isbn;
-    private double price;
-    private int quantity;
+    private Double price;
+    private Integer quantity;
 }

@@ -52,4 +52,13 @@ public class BookRepository implements IBookDAO {
         book.setId(++this.lastId);
         this.books.add(book);
     }
+
+    public Book findByIsbn(String isbn) {
+        for (Book book : this.books) {
+            if (book.getIsbn().equals(isbn)) {
+                return book;
+            }
+        }
+        return null;
+    }
 }

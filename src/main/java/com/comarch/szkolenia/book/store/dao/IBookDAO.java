@@ -8,4 +8,5 @@ public interface IBookDAO {
     Book getById(int id);
     List<Book> getAll();
     void persist(Book book);
+    Book findByIsbn(String isbn);
 }

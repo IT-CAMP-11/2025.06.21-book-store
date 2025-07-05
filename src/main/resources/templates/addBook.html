@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments.html :: headers}"></th:block>
+</head>
+<body>
+<div th:replace="~{fragments.html :: logo}"></div>
+<div th:replace="~{fragments.html :: menu}"></div>
+<div id="content">
+    <form method="post" th:object="${bookModel}">
+        <input class="text-field" type="text" placeholder="Tytuł" th:field="*{title}">
+        <input class="text-field" type="text" placeholder="Autor" th:field="*{author}">
+        <input class="text-field" type="text" placeholder="ISBN" th:field="*{isbn}" required>
+        <input class="text-field" type="number" step="0.01" min="0" placeholder="Cena" th:field="*{price}">
+        <input class="text-field" type="number" min="0" placeholder="Ilość" th:field="*{quantity}" required>
+        <input class="button" type="submit" value="OK">
+    </form>
+</div>
+</body>
+</html>
