@@ -2,22 +2,28 @@
     width: 100%;
     border: 2px solid #29A6A8;
     border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
 }
 
 .id {
     width: 15%;
+    display: inline-block;
 }
 
 .date {
     width: 33%;
+    display: inline-block;
 }
 
 .price {
     width: 33%;
+    display: inline-block;
 }
 
 .quantity {
     width: 15%;
+    display: inline-block;
 }
 
 .details {
@@ -26,4 +32,35 @@
 
 .address {
     font-size: 30px;
+}
+
+.inner-row {
+    width: 100%;
+    border-bottom: 1px solid #29A6A8;
+    margin: 10px 0;
+}
+
+.inner-row .title {
+    width: 32%;
+    display: inline-block;
+}
+
+.inner-row .author {
+    width: 32%;
+    display: inline-block;
+}
+
+.inner-row .price {
+    width: 11%;
+    display: inline-block;
+}
+
+.inner-row .quantity {
+    width: 11%;
+    display: inline-block;
+}
+
+.inner-row .sum {
+    width: 11%;
+    display: inline-block;
 }

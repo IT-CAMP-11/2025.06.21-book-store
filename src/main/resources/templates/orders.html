@@ -23,32 +23,23 @@
             <div th:text="${order.positions.size()}" class="quantity"></div>
             <div class="details">
                 <div th:text="${order.addressLine()}" class="address"></div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th class="id">Tytuł</th>
-                        <th class="date">Autor</th>
-                        <th class="price">Cena j.</th>
-                        <th class="quantity">Ilość</th>
-                        <th>Suma</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="position : ${order.positions}">
-                        <td th:text="${position.title}"></td>
-                        <td th:text="${position.author}"></td>
-                        <td th:text="${position.price}"></td>
-                        <td th:text="${position.quantity}"></td>
-                        <th th:text="${position.sum()}"></th>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="inner-row">
+                    <div class="title">Tytuł</div>
+                    <div class="author">Autor</div>
+                    <div class="price">Cena j.</div>
+                    <div class="quantity">Ilość</div>
+                    <div class="sum">Suma</div>
+                </div>
+                <div class="inner-row" th:each="position : ${order.positions}">
+                    <div class="title" th:text="${position.title}"></div>
+                    <div class="author" th:text="${position.author}"></div>
+                    <div class="price" th:text="${position.price}"></div>
+                    <div class="quantity" th:text="${position.quantity}"></div>
+                    <div class="sum" th:text="${position.sum()}"></div>
+                </div>
             </div>
         </div>
     </th:block>
-
-    </tbody>
-    </table>
     <!--<div th:if="${cart.size() == 0}">Koszyk jest pusty !!</div>-->
 </div>
 </body>
