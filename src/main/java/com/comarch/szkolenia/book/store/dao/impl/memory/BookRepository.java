@@ -61,4 +61,20 @@ public class BookRepository implements IBookDAO {
         }
         return null;
     }
+
+    @Override
+    public List<Book> searchByTitleOrAuthor(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return getAll();
+        }
+        List<Book> result = new ArrayList<>();
+        String lowerSearchTerm = searchTerm.toLowerCase();
+        for (Book book : this.books) {
+            if (book.getTitle().toLowerCase().contains(lowerSearchTerm)
+                    || book.getAuthor().toLowerCase().contains(lowerSearchTerm)) {
+                result.add(book);
+            }
+        }
+        return result;
+    }
 }

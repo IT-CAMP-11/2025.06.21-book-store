@@ -7,6 +7,12 @@
 <body>
 <div th:replace="~{fragments.html :: logo}"></div>
 <div th:replace="~{fragments.html :: menu}"></div>
+<div class="search-form">
+    <form method="get" action="/main" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <input type="text" name="search" placeholder="Wyszukaj książkę..." th:value="${search}" class="text-field search-narrow">
+        <button type="submit" class="button">Szukaj</button>
+    </form>
+</div>
 <div id="content">
     <div class="book" th:each="book : ${books}">
         <div class="title" th:text="${book.title}"></div>

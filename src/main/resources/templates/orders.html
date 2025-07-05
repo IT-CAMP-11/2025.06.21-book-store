@@ -9,7 +9,7 @@
 <div th:replace="~{fragments.html :: logo}"></div>
 <div th:replace="~{fragments.html :: menu}"></div>
 <div id="content">
-    <div class="big-row">
+    <div class="big-row" th:if="${orders.size() != 0}">
         <div class="id">Id</div>
         <div class="date">Data</div>
         <div class="price">Cena</div>
@@ -40,7 +40,7 @@
             </div>
         </div>
     </th:block>
-    <!--<div th:if="${cart.size() == 0}">Koszyk jest pusty !!</div>-->
+    <div th:if="${orders.size() == 0}">Nie masz jeszcze zamówień !!</div>
 </div>
 </body>
 </html>

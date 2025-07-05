@@ -9,4 +9,5 @@ public interface IBookDAO {
     List<Book> getAll();
     void persist(Book book);
     Book findByIsbn(String isbn);
+    List<Book> searchByTitleOrAuthor(String searchTerm);
 }
