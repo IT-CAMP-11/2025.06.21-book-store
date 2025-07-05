@@ -34,4 +34,8 @@ public class Cart {
 
         return result;
     }
+
+    public void removePosition(int bookId) {
+        this.positions.remove(bookId);
+    }
 }

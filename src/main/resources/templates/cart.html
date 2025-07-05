@@ -16,6 +16,7 @@
                 <th class="quantity">Ilość</th>
                 <th class="price">Cena j.</th>
                 <th class="sum">Suma</th>
+                <th class="actions">Usuń</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,11 @@
                 <td th:text="${position.quantity}" class="quantity"></td>
                 <td th:text="${#numbers.formatDecimal(position.price, 2, 2, 'POINT') + ' zł'}" class="price"></td>
                 <td th:text="${#numbers.formatDecimal(position.getSum(), 2, 2, 'POINT') + ' zł'}" class="sum"></td>
+                <td class="actions">
+                    <a th:href="@{/cart/remove/{id}(id=${position.bookId})}" class="delete-btn">
+                        <img src="/delete.png" alt="Usuń" class="delete-icon">
+                    </a>
+                </td>
             </tr>
         <tr>
             <td style="border: 0px !important"></td>
@@ -32,6 +38,7 @@
             <td></td>
             <td>Suma:</td>
             <td th:text="${#numbers.formatDecimal(cartSum, 2, 2, 'POINT') + ' zł'}"></td>
+            <td style="border: 0px !important"></td>
         </tr>
         </tbody>
     </table>

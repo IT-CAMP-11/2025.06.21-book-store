@@ -31,7 +31,7 @@ public class CartController {
             Book book = this.bookDAO.getById(position.getKey());
             if(book != null) {
                 cartPositions.add(
-                        new CartPosition(book.getTitle(), book.getAuthor(),
+                        new CartPosition(book.getId(), book.getTitle(), book.getAuthor(),
                                 position.getValue(), book.getPrice())
                 );
             }
@@ -53,5 +53,11 @@ public class CartController {
             }
         }
         return "redirect:/main";
+    }
+
+    @GetMapping("/cart/remove/{bookId}")
+    public String removeFromCart(@PathVariable int bookId) {
+        this.cart.removePosition(bookId);
+        return "redirect:/cart";
     }
 }

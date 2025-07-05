@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartPosition {
+    private int bookId;
     private String title;
     private String author;
     private int quantity;

@@ -12,15 +12,15 @@
 }
 
 .title {
-    width: 40%;
+    width: 35%;
 }
 
 .author {
-    width: 30%;
+    width: 25%;
 }
 
 .quantity {
-    width: 5%;
+    width: 10%;
 }
 
 .price {
@@ -29,4 +29,26 @@
 
 .sum {
     width: 10%;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.delete-icon {
+    width: 24px;
+    height: 24px;
+    transition: filter 0.2s;
+}
+
+.delete-btn:hover .delete-icon {
+    filter: brightness(0.7) drop-shadow(0 0 2px red);
+}
+
+.actions {
+    width: 10%;
+    text-align: center;
 }
