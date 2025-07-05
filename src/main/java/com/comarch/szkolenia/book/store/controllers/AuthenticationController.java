@@ -1,8 +1,10 @@
 package com.comarch.szkolenia.book.store.controllers;
 
 import com.comarch.szkolenia.book.store.dao.IUserDAO;
+import com.comarch.szkolenia.book.store.exceptions.UserValidationException;
 import com.comarch.szkolenia.book.store.session.Cart;
 import com.comarch.szkolenia.book.store.model.User;
+import com.comarch.szkolenia.book.store.validators.UserValidator;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,12 @@ public class AuthenticationController {
     @PostMapping("/register")
     public String register(@ModelAttribute User user,
                             @RequestParam("password2") String password2) {
+        try {
+            UserValidator.validateUser(user);
+        } catch (UserValidationException e) {
+            return "redirect:/register";
+        }
+
         if(!user.getPassword().equals(password2) || this.userDAO.getByLogin(user.getLogin()) != null) {
             return "redirect:/register";
         }
@@ -51,6 +59,13 @@ public class AuthenticationController {
     public String login(@RequestParam("login") String login,
                         @RequestParam("password") String password,
                         HttpSession session) {
+        try {
+            UserValidator.validateLogin(login);
+            UserValidator.validatePassword(password);
+        } catch (UserValidationException e) {
+            return "redirect:/login";
+        }
+
         User user = this.userDAO.getByLogin(login);
         if(user != null && DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())) {
             session.setAttribute("user", user);

@@ -2,11 +2,12 @@ package com.comarch.szkolenia.book.store.controllers;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.dao.IOrderDAO;
+import com.comarch.szkolenia.book.store.exceptions.OrderValidationException;
 import com.comarch.szkolenia.book.store.model.Book;
 import com.comarch.szkolenia.book.store.model.Order;
 import com.comarch.szkolenia.book.store.model.User;
-import com.comarch.szkolenia.book.store.model.view.CartPosition;
 import com.comarch.szkolenia.book.store.session.Cart;
+import com.comarch.szkolenia.book.store.validators.OrderValidator;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +39,15 @@ public class OrderController {
 
     @PostMapping("/confirm")
     public String confirm(@ModelAttribute Order order, HttpSession session) {
+        try {
+            OrderValidator.validateOrder(order);
+        } catch (OrderValidationException e) {
+            return "redirect:/order";
+        }
         User user = (User) session.getAttribute("user");
         order.setUserId(user.getId());
         order.setDate(new Date());
-
         boolean isIncorrectQuantity = false;
-
         for (Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
             Book book = this.bookDAO.getById(position.getKey());
             if (book != null && book.getQuantity() >= position.getValue()) {
@@ -53,11 +57,9 @@ public class OrderController {
                 isIncorrectQuantity = true;
             }
         }
-
         if (isIncorrectQuantity) {
             return "redirect:/cart";
         }
-
         order.setPrice(this.cart.calculatePrice());
         this.orderDAO.persist(order);
         for (Order.Position position : order.getPositions()) {
@@ -65,7 +67,6 @@ public class OrderController {
             book.setQuantity(book.getQuantity() - position.getQuantity());
         }
         this.cart.getPositions().clear();
-
         return "redirect:/main";
     }
 

@@ -2,18 +2,19 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{fragments.html :: headers}"></th:block>
+    <script src="/validator.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments.html :: logo}"></div>
 <div th:replace="~{fragments.html :: menu}"></div>
 <div id="content">
-    <form method="post">
-        <input class="text-field" type="text" placeholder="Login" th:field="*{userObject.login}">
-        <input class="text-field" type="password" placeholder="Hasło" th:field="*{userObject.password}">
-        <input class="text-field" type="password" placeholder="Powtórz hasło" name="password2">
-        <input class="text-field" type="text" placeholder="Imie" th:field="*{userObject.name}">
-        <input class="text-field" type="text" placeholder="Nazwisko" th:field="*{userObject.surname}">
-        <input class="text-field" type="text" placeholder="Wiek" th:field="*{userObject.age}">
+    <form method="post" onsubmit="return validateRegisterForm()">
+        <input class="text-field" type="text" placeholder="Login" th:field="*{userObject.login}" id="login-field">
+        <input class="text-field" type="password" placeholder="Hasło" th:field="*{userObject.password}" id="password-field">
+        <input class="text-field" type="password" placeholder="Powtórz hasło" name="password2" id="password2-field">
+        <input class="text-field" type="text" placeholder="Imie" th:field="*{userObject.name}" id="name-field">
+        <input class="text-field" type="text" placeholder="Nazwisko" th:field="*{userObject.surname}" id="surname-field">
+        <input class="text-field" type="text" placeholder="Wiek" th:field="*{userObject.age}" id="age-field">
         <input class="button" type="submit" value="Zarejestruj">
     </form>
 </div>

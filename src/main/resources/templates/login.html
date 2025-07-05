@@ -2,14 +2,15 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{fragments.html :: headers}"></th:block>
+    <script src="/validator.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments.html :: logo}"></div>
 <div th:replace="~{fragments.html :: menu}"></div>
 <div id="content">
-    <form method="post">
-        <input class="text-field" type="text" placeholder="Login" name="login">
-        <input class="text-field" type="password" placeholder="Hasło" name="password">
+    <form method="post" onsubmit="return validateLoginForm();">
+        <input class="text-field" type="text" placeholder="Login" name="login" id="login-field">
+        <input class="text-field" type="password" placeholder="Hasło" name="password" id="password-field">
         <input class="button" type="submit" value="Zaloguj">
     </form>
     <p>Nie masz konta ?? <a href="/register">Zarejestruj</a></p>

@@ -18,7 +18,10 @@ public class LoginFilter implements Filter {
         HttpSession session = req.getSession(false);
 
         User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user != null) {
+        String uri = req.getRequestURI();
+        if(user != null && uri.equals("/login")) {
+            res.sendRedirect("/main");
+        } else if (user == null && !uri.equals("/login")) {
             res.sendRedirect("/main");
         } else {
             chain.doFilter(request, response);

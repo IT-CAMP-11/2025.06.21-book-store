@@ -2,17 +2,18 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
   <th:block th:replace="~{fragments.html :: headers}"></th:block>
+  <script src="/validator.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments.html :: logo}"></div>
 <div th:replace="~{fragments.html :: menu}"></div>
 <div id="content">
-  <form method="post" action="/confirm">
-    <input class="text-field" type="text" placeholder="Miasto" th:field="*{orderObject.city}">
-    <input class="text-field" type="text" placeholder="Ulica" th:field="*{orderObject.street}">
-    <input class="text-field" type="text" placeholder="Numer budynku/mieszkania" th:field="*{orderObject.no}">
-    <input class="text-field" type="text" placeholder="Kod pocztowy" th:field="*{orderObject.postCode}">
-    <input class="text-field" type="text" placeholder="Numer telefonu" th:field="*{orderObject.phoneNumber}">
+  <form method="post" action="/confirm" onsubmit="return validateOrderForm();">
+    <input class="text-field" type="text" placeholder="Miasto" th:field="*{orderObject.city}" id="city-field">
+    <input class="text-field" type="text" placeholder="Ulica" th:field="*{orderObject.street}" id="street-field">
+    <input class="text-field" type="text" placeholder="Numer budynku/mieszkania" th:field="*{orderObject.no}" id="no-field">
+    <input class="text-field" type="text" placeholder="Kod pocztowy" th:field="*{orderObject.postCode}" id="postCode-field">
+    <input class="text-field" type="text" placeholder="Numer telefonu" th:field="*{orderObject.phoneNumber}" id="phoneNumber-field">
     <input class="button" type="submit" value="Zamów">
   </form>
 </div>
