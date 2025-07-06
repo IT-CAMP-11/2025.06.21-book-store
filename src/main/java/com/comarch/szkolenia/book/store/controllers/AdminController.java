@@ -1,8 +1,8 @@
 package com.comarch.szkolenia.book.store.controllers;
 
-import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.exceptions.BookValidationException;
 import com.comarch.szkolenia.book.store.model.Book;
+import com.comarch.szkolenia.book.store.services.IBookService;
 import com.comarch.szkolenia.book.store.validators.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
-
-    private final IBookDAO bookDAO;
+    private final IBookService bookService;
 
     @GetMapping("/addBook")
     public String addBook(Model model) {
@@ -29,17 +28,8 @@ public class AdminController {
         try {
             BookValidator.validateIsbn(book.getIsbn());
             BookValidator.validateQuantity(book.getQuantity());
-
-            Book byIsbn = bookDAO.findByIsbn(book.getIsbn());
-            if (byIsbn == null) {
-                BookValidator.validateBook(book);
-                bookDAO.persist(book);
-            } else {
-                byIsbn.setQuantity(byIsbn.getQuantity() + book.getQuantity());
-            }
-
+            this.bookService.persistBook(book);
             return "redirect:/main";
-
         } catch (BookValidationException e) {
             return "redirect:/addBook";
         }
@@ -47,8 +37,7 @@ public class AdminController {
 
     @GetMapping("/editBook/{id}")
     public String editBook(@PathVariable("id") int id, Model model) {
-        Book byId = this.bookDAO.getById(id);
-        model.addAttribute("bookModel", byId);
+        model.addAttribute("bookModel", this.bookService.getBookById(id));
         return "addBook";
     }
 
@@ -59,15 +48,7 @@ public class AdminController {
         } catch (BookValidationException e) {
             return "redirect:/editBook/" + id;
         }
-
-        Book byId = this.bookDAO.getById(id);
-        if (byId != null) {
-            byId.setTitle(book.getTitle());
-            byId.setAuthor(book.getAuthor());
-            byId.setIsbn(book.getIsbn());
-            byId.setPrice(book.getPrice());
-            byId.setQuantity(book.getQuantity());
-        }
+        this.bookService.updateBook(id, book);
         return "redirect:/main";
     }
 }

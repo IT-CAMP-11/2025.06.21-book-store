@@ -43,6 +43,12 @@ public class UserValidator {
         }
     }
 
+    public static void checkPasswordsMatch(String password, String confirmPassword) {
+        if(password == null || confirmPassword == null || !password.equals(confirmPassword)) {
+            throw new UserValidationException("Passwords do not match");
+        }
+    }
+
     public static void validateUser(User user) {
         validateLogin(user.getLogin());
         validatePassword(user.getPassword());

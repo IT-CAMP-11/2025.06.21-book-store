@@ -1,16 +1,14 @@
 package com.comarch.szkolenia.book.store.controllers;
 
-import com.comarch.szkolenia.book.store.dao.IUserDAO;
+import com.comarch.szkolenia.book.store.exceptions.LoginAlreadyExistException;
 import com.comarch.szkolenia.book.store.exceptions.UserValidationException;
-import com.comarch.szkolenia.book.store.session.Cart;
+import com.comarch.szkolenia.book.store.services.IAuthenticationService;
 import com.comarch.szkolenia.book.store.model.User;
 import com.comarch.szkolenia.book.store.validators.UserValidator;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final IUserDAO userDAO;
-
-    @Resource
-    private Cart cart;
+    private final IAuthenticationService authenticationService;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -35,17 +30,11 @@ public class AuthenticationController {
                             @RequestParam("password2") String password2) {
         try {
             UserValidator.validateUser(user);
-        } catch (UserValidationException e) {
+            UserValidator.checkPasswordsMatch(user.getPassword(), password2);
+            this.authenticationService.register(user);
+        } catch (UserValidationException | LoginAlreadyExistException e) {
             return "redirect:/register";
         }
-
-        if(!user.getPassword().equals(password2) || this.userDAO.getByLogin(user.getLogin()) != null) {
-            return "redirect:/register";
-        }
-
-        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
-        user.setRole(User.Role.USER);
-        this.userDAO.persist(user);
 
         return "redirect:/main";
     }
@@ -66,19 +55,16 @@ public class AuthenticationController {
             return "redirect:/login";
         }
 
-        User user = this.userDAO.getByLogin(login);
-        if(user != null && DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())) {
-            session.setAttribute("user", user);
-            return "redirect:/main";
+        this.authenticationService.authenticate(login, password);
+        if(session.getAttribute("user") == null) {
+            return "redirect:/login";
         }
-
-        return "redirect:/login";
+        return "redirect:/main";
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("user");
-        this.cart.getPositions().clear();
+    public String logout() {
+        this.authenticationService.logout();
         return "redirect:/login";
     }
 }

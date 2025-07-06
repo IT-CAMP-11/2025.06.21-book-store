@@ -1,5 +1,6 @@
 package com.comarch.szkolenia.book.store.model.view;
 
+import com.comarch.szkolenia.book.store.model.Book;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class VOrder {
     private int id;
     private Date date;
     private double price;
@@ -23,6 +24,17 @@ public class Order {
     private String postCode;
     private String phoneNumber;
     private final List<Position> positions = new ArrayList<>();
+
+    public VOrder(com.comarch.szkolenia.book.store.model.Order order) {
+        this.id = order.getId();
+        this.date = order.getDate();
+        this.price = order.getPrice();
+        this.city = order.getCity();
+        this.street = order.getStreet();
+        this.no = order.getNo();
+        this.postCode = order.getPostCode();
+        this.phoneNumber = order.getPhoneNumber();
+    }
 
     public String addressLine() {
         return new StringBuilder()
@@ -49,6 +61,13 @@ public class Order {
         private String author;
         private double price;
         private int quantity;
+
+        public Position(Book book, int quantity) {
+            this.title = book.getTitle();
+            this.author = book.getAuthor();
+            this.price = book.getPrice();
+            this.quantity = quantity;
+        }
 
         public double sum() {
             return this.quantity * this.price;
