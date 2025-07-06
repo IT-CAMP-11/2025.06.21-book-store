@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,14 +23,14 @@ public class OrderRepository implements IOrderDAO {
     }
 
     @Override
-    public Order getById(int id) {
+    public Optional<Order> getById(int id) {
         for (Order order : this.orders) {
             if(order.getId() == id) {
-                return order;
+                return Optional.of(order);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
@@ -36,9 +38,15 @@ public class AdminController {
     }
 
     @GetMapping("/editBook/{id}")
-    public String editBook(@PathVariable("id") int id, Model model) {
-        model.addAttribute("bookModel", this.bookService.getBookById(id));
-        return "addBook";
+    public String editBook(@PathVariable("id") int id, final Model model) {
+        Optional<Book> bookBox = this.bookService.getBookById(id);
+
+        return bookBox
+                .map(b -> {
+                    model.addAttribute("bookModel", b);
+                    return "addBook";
+                })
+                .orElse("redirect:/main");
     }
 
     @PostMapping("/editBook/{id}")

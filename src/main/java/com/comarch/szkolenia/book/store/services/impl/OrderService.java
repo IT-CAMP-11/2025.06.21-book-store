@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +36,7 @@ public class OrderService implements IOrderService {
         order.setPrice(this.cart.calculatePrice());
         for(Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
             order.getPositions().add(new Order.Position(position.getKey(), position.getValue()));
-            Book book = this.bookDAO.getById(position.getKey());
+            Book book = this.bookDAO.getById(position.getKey()).get();
             book.setQuantity(book.getQuantity() - position.getValue());
         }
         this.orderDAO.persist(order);
@@ -54,8 +51,8 @@ public class OrderService implements IOrderService {
         for(Order order : orders) {
             VOrder vOrder = new VOrder(order);
             for(Order.Position position : order.getPositions()) {
-                Book book = this.bookDAO.getById(position.getBookId());
-                VOrder.Position vPosition = new VOrder.Position(book, position.getQuantity());
+                Optional<Book> bookBox = this.bookDAO.getById(position.getBookId());
+                VOrder.Position vPosition = new VOrder.Position(bookBox.get(), position.getQuantity());
                 vOrder.getPositions().add(vPosition);
             }
             result.add(vOrder);

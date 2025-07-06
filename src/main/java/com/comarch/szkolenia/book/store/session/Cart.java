@@ -9,6 +9,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -26,9 +27,9 @@ public class Cart {
             int bookId = position.getKey();
             int quantity = position.getValue();
 
-            Book book = this.bookDAO.getById(bookId);
-            if(book != null) {
-                result += book.getPrice() * quantity;
+            Optional<Book> bookBox = this.bookDAO.getById(bookId);
+            if(bookBox.isPresent()) {
+                result += bookBox.get().getPrice() * quantity;
             }
         }
 

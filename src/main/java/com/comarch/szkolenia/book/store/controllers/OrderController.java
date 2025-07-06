@@ -33,7 +33,7 @@ public class OrderController {
         } catch (OrderValidationException e) {
             return "redirect:/order";
         } catch (InvalidCartException e) {
-            return "/redirect:/cart";
+            return "redirect:/cart";
         }
 
         this.orderService.confirmOrder(order);

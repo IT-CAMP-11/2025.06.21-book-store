@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService implements IAuthenticationService {
@@ -25,7 +27,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void register(User user) {
-        if(this.userDAO.getByLogin(user.getLogin()) != null) {
+        if(this.userDAO.getByLogin(user.getLogin()).isPresent()) {
             throw new LoginAlreadyExistException("Login already exists: " + user.getLogin());
         }
 
@@ -36,9 +38,10 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void authenticate(String login, String password) {
-        User user = this.userDAO.getByLogin(login);
-        if(user != null && DigestUtils.md5DigestAsHex(password.getBytes()).equals(user.getPassword())) {
-            session.setAttribute("user", user);
+        Optional<User> userBox = this.userDAO.getByLogin(login);
+        if(userBox.isPresent() &&
+                DigestUtils.md5DigestAsHex(password.getBytes()).equals(userBox.get().getPassword())) {
+            session.setAttribute("user", userBox.get());
         }
     }
 

@@ -126,40 +126,20 @@ function validateLoginForm() {
 }
 
 function validateAddBookForm() {
-    var title = document.getElementById("title-field");
-    var author = document.getElementById("author-field");
     var isbn = document.getElementById("isbn-field");
-    var price = document.getElementById("price-field");
     var quantity = document.getElementById("quantity-field");
 
-    var titleRegex = new RegExp(".+");
-    var authorRegex = new RegExp(".+");
     var isbnRegex = new RegExp("^97[89][- ]?83([- ]?\\d+){3}[- ]?\\d$");
+
     var result = true;
-    if(!titleRegex.test(title.value)) {
-        result = false;
-        title.style.background = "#fac0c0";
-    } else {
-        title.style.background = null;
-    }
-    if(!authorRegex.test(author.value)) {
-        result = false;
-        author.style.background = "#fac0c0";
-    } else {
-        author.style.background = null;
-    }
+
     if(!isbnRegex.test(isbn.value)) {
         result = false;
         isbn.style.background = "#fac0c0";
     } else {
         isbn.style.background = null;
     }
-    if(price.value <= 0) {
-        result = false;
-        price.style.background = "#fac0c0";
-    } else {
-        price.style.background = null;
-    }
+
     if(quantity.value < 0) {
         result = false;
         quantity.style.background = "#fac0c0";

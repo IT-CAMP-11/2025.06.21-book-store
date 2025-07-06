@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BookRepository implements IBookDAO {
@@ -34,14 +35,14 @@ public class BookRepository implements IBookDAO {
     }
 
     @Override
-    public Book getById(int id) {
+    public Optional<Book> getById(int id) {
         for(Book book : this.books) {
             if(book.getId() == id) {
-                return book;
+                return Optional.of(book);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -56,13 +57,13 @@ public class BookRepository implements IBookDAO {
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
+    public Optional<Book> findByIsbn(String isbn) {
         for (Book book : this.books) {
             if (book.getIsbn().equals(isbn)) {
-                return book;
+                return Optional.of(book);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

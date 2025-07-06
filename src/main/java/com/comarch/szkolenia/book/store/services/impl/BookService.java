@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,31 +16,33 @@ public class BookService implements IBookService {
     private final IBookDAO bookDAO;
 
     @Override
-    public void persistBook(Book book) {
-        Book bookWithIsbn = bookDAO.findByIsbn(book.getIsbn());
-        if (bookWithIsbn == null) {
-            BookValidator.validateBook(book);
-            bookDAO.persist(book);
-        } else {
-            bookWithIsbn.setQuantity(bookWithIsbn.getQuantity() + book.getQuantity());
-        }
+    public void persistBook(final Book book) {
+        this.bookDAO.findByIsbn(book.getIsbn())
+                .ifPresentOrElse(
+                        b -> b.setQuantity(b.getQuantity() + book.getQuantity()),
+                        () -> {
+                            BookValidator.validateBook(book);
+                            bookDAO.persist(book);
+                        }
+                );
     }
 
     @Override
-    public Book getBookById(int id) {
+    public Optional<Book> getBookById(int id) {
         return this.bookDAO.getById(id);
     }
 
     @Override
     public void updateBook(int id, Book book) {
-        Book bookFromDb = this.bookDAO.getById(id);
-        if (bookFromDb != null) {
-            bookFromDb.setTitle(book.getTitle());
-            bookFromDb.setAuthor(book.getAuthor());
-            bookFromDb.setIsbn(book.getIsbn());
-            bookFromDb.setPrice(book.getPrice());
-            bookFromDb.setQuantity(book.getQuantity());
-        }
+        this.bookDAO.getById(id)
+                .ifPresent(b -> {
+                    b.setTitle(book.getTitle());
+                    b.setAuthor(book.getAuthor());
+                    b.setIsbn(book.getIsbn());
+                    b.setPrice(book.getPrice());
+                    b.setQuantity(book.getQuantity());
+                }
+        );
     }
 
     @Override

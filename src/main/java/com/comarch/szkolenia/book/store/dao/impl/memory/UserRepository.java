@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository implements IUserDAO {
@@ -29,25 +30,25 @@ public class UserRepository implements IUserDAO {
     }
 
     @Override
-    public User getById(int id) {
+    public Optional<User> getById(int id) {
         for(User user : this.users) {
             if(user.getId() == id) {
-                return user;
+                return Optional.of(user);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public User getByLogin(String login) {
+    public Optional<User> getByLogin(String login) {
         for(User user : this.users) {
             if(user.getLogin().equals(login)) {
-                return user;
+                return Optional.of(user);
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
