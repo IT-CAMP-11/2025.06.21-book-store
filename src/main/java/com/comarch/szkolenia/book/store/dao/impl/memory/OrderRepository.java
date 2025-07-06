@@ -2,19 +2,22 @@ package com.comarch.szkolenia.book.store.dao.impl.memory;
 
 import com.comarch.szkolenia.book.store.dao.IOrderDAO;
 import com.comarch.szkolenia.book.store.model.Order;
-import org.springframework.stereotype.Component;
+import com.comarch.szkolenia.book.store.services.IIdSequence;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
+@RequiredArgsConstructor
 public class OrderRepository implements IOrderDAO {
     private final List<Order> orders = new ArrayList<>();
-    private int lastId = 0;
+    private final IIdSequence idSequence;
 
     @Override
     public void persist(Order order) {
-        order.setId(++this.lastId);
+        order.setId(this.idSequence.getNextId());
         this.orders.add(order);
     }
 

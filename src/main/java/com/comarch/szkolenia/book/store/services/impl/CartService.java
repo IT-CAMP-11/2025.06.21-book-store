@@ -8,13 +8,13 @@ import com.comarch.szkolenia.book.store.services.ICartService;
 import com.comarch.szkolenia.book.store.session.Cart;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class CartService implements ICartService {
     private final IBookDAO bookDAO;

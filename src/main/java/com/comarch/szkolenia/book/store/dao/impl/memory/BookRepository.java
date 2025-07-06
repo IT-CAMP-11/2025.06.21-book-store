@@ -2,31 +2,33 @@ package com.comarch.szkolenia.book.store.dao.impl.memory;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.model.Book;
-import org.springframework.stereotype.Component;
+import com.comarch.szkolenia.book.store.services.IIdSequence;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class BookRepository implements IBookDAO {
     private final List<Book> books = new ArrayList<>();
-    private int lastId = 4;
+    private final IIdSequence idSequence;
 
-    public BookRepository() {
+    public BookRepository(IIdSequence idSequence) {
+        this.idSequence = idSequence;
         this.books.add(
-                new Book(1, "Java. Kompendium programisty. Wydanie XII",
+                new Book(this.idSequence.getNextId(), "Java. Kompendium programisty. Wydanie XII",
                 "Herbert Schildt", "978-83-832-2156-4",
                 129.35, 10));
         this.books.add(
-                new Book(2, "Java. Przewodnik dla początkujących. Wydanie IX",
+                new Book(this.idSequence.getNextId(), "Java. Przewodnik dla początkujących. Wydanie IX",
                 "Herbert Schildt", "978-83-289-0479-80",
                 83.85, 10));
         this.books.add(
-                new Book(3, "Java. Rusz głową! Wydanie III",
+                new Book(this.idSequence.getNextId(), "Java. Rusz głową! Wydanie III",
                 "Kathy Sierra, Bert Bates, Trisha Gee", "978-83-283-9984-6",
                 96.85, 10));
         this.books.add(
-                new Book(4, "Java. Teoria w praktyce",
+                new Book(this.idSequence.getNextId(), "Java. Teoria w praktyce",
                 "Michał Suwała", "978-83-289-0022-6",
                 70.85, 10));
     }
@@ -49,7 +51,7 @@ public class BookRepository implements IBookDAO {
 
     @Override
     public void persist(Book book) {
-        book.setId(++this.lastId);
+        book.setId(this.idSequence.getNextId());
         this.books.add(book);
     }
 

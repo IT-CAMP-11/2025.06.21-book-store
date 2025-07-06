@@ -5,11 +5,11 @@ import com.comarch.szkolenia.book.store.model.Book;
 import com.comarch.szkolenia.book.store.services.IBookService;
 import com.comarch.szkolenia.book.store.validators.BookValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class BookService implements IBookService {
     private final IBookDAO bookDAO;
