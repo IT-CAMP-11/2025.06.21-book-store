@@ -29,35 +29,41 @@ public class OrderService implements IOrderService {
     private Cart cart;
 
     @Override
-    public void confirmOrder(Order order) {
+    public void confirmOrder(final Order order) {
         User user = (User) session.getAttribute("user");
         order.setUserId(user.getId());
         order.setDate(new Date());
         order.setPrice(this.cart.calculatePrice());
-        for(Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
-            order.getPositions().add(new Order.Position(position.getKey(), position.getValue()));
-            Book book = this.bookDAO.getById(position.getKey()).get();
-            book.setQuantity(book.getQuantity() - position.getValue());
-        }
+        this.cart.getPositions().forEach((bookId, quantity) -> {
+            order.getPositions().add(new Order.Position(bookId, quantity));
+            this.bookDAO.getById(bookId)
+                    .ifPresent(book -> book.setQuantity(book.getQuantity() - quantity));
+        });
         this.orderDAO.persist(order);
         this.cart.getPositions().clear();
     }
 
     @Override
     public List<VOrder> getCurrentUserOrders() {
-        List<Order> orders = this.orderDAO.getByUserId(((User) session.getAttribute("user")).getId());
-        List<VOrder> result = new ArrayList<>();
+        int userId = ((User) session.getAttribute("user")).getId();
+        return this.orderDAO.getByUserId(userId).stream()
+                .map(this::convertToVOrder)
+                .toList();
+    }
 
-        for(Order order : orders) {
-            VOrder vOrder = new VOrder(order);
-            for(Order.Position position : order.getPositions()) {
-                Optional<Book> bookBox = this.bookDAO.getById(position.getBookId());
-                VOrder.Position vPosition = new VOrder.Position(bookBox.get(), position.getQuantity());
-                vOrder.getPositions().add(vPosition);
-            }
-            result.add(vOrder);
-        }
+    private VOrder convertToVOrder(Order order) {
+        final VOrder vOrder = new VOrder(order);
+        order.getPositions().stream()
+                .map(this::convertToVPosition)
+                .filter(Objects::nonNull)
+                .forEach(position -> vOrder.getPositions().add(position));
+        return vOrder;
+    }
 
-        return result;
+    private VOrder.Position convertToVPosition(Order.Position position) {
+        Optional<Book> bookBox = this.bookDAO.getById(position.getBookId());
+        return bookBox
+                .map(book -> new VOrder.Position(book, position.getQuantity()))
+                .orElse(null);
     }
 }

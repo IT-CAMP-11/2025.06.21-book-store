@@ -10,10 +10,7 @@ import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,19 +22,10 @@ public class CartService implements ICartService {
 
     @Override
     public List<CartPosition> getCartPositions() {
-        final List<CartPosition> cartPositions = new ArrayList<>();
-
-        for (Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
-            this.bookDAO.getById(position.getKey())
-                    .ifPresent(b -> {
-                        cartPositions.add(
-                                new CartPosition(b.getId(), b.getTitle(), b.getAuthor(),
-                                        position.getValue(), b.getPrice())
-                        );
-                    });
-        }
-
-        return cartPositions;
+        return this.cart.getPositions().entrySet().stream()
+                .map(this::convertToCartPosition)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override
@@ -68,5 +56,15 @@ public class CartService implements ICartService {
         if (!isValid) {
             throw new InvalidCartException();
         }
+    }
+
+    private CartPosition convertToCartPosition(Map.Entry<Integer, Integer> position) {
+        Optional<Book> bookBox = this.bookDAO.getById(position.getKey());
+        if (bookBox.isPresent()) {
+            Book book = bookBox.get();
+            return new CartPosition(book.getId(), book.getTitle(), book.getAuthor(),
+                    position.getValue(), book.getPrice());
+        }
+        return null;
     }
 }

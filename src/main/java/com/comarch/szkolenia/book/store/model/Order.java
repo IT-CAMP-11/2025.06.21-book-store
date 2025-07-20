@@ -29,7 +29,14 @@ public class Order {
     @NoArgsConstructor
     @ToString
     public static class Position {
+        private int id;
         private int bookId;
         private int quantity;
+        private int orderId;
+
+        public Position(int bookId, int quantity) {
+            this.bookId = bookId;
+            this.quantity = quantity;
+        }
     }
 }

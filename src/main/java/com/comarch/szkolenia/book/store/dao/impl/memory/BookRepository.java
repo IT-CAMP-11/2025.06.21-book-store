@@ -35,14 +35,10 @@ public class BookRepository implements IBookDAO {
     }
 
     @Override
-    public Optional<Book> getById(int id) {
-        for(Book book : this.books) {
-            if(book.getId() == id) {
-                return Optional.of(book);
-            }
-        }
-
-        return Optional.empty();
+    public Optional<Book> getById(final int id) {
+        return this.books.stream()
+                .filter(b -> b.getId() == id)
+                .findFirst();
     }
 
     @Override
@@ -57,13 +53,10 @@ public class BookRepository implements IBookDAO {
     }
 
     @Override
-    public Optional<Book> findByIsbn(String isbn) {
-        for (Book book : this.books) {
-            if (book.getIsbn().equals(isbn)) {
-                return Optional.of(book);
-            }
-        }
-        return Optional.empty();
+    public Optional<Book> findByIsbn(final String isbn) {
+        return this.books.stream()
+                .filter(b -> b.getIsbn().equals(isbn))
+                .findFirst();
     }
 
     @Override
@@ -71,14 +64,15 @@ public class BookRepository implements IBookDAO {
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
             return getAll();
         }
-        List<Book> result = new ArrayList<>();
-        String lowerSearchTerm = searchTerm.toLowerCase();
-        for (Book book : this.books) {
-            if (book.getTitle().toLowerCase().contains(lowerSearchTerm)
-                    || book.getAuthor().toLowerCase().contains(lowerSearchTerm)) {
-                result.add(book);
-            }
-        }
-        return result;
+
+        final String lowerSearchTerm = searchTerm.toLowerCase();
+        return this.books.stream()
+                .filter(b -> checkIfContains(b, lowerSearchTerm))
+                .toList();
+    }
+
+    private boolean checkIfContains(Book book, String term) {
+        return book.getTitle().toLowerCase().contains(term) ||
+                book.getAuthor().toLowerCase().contains(term);
     }
 }

@@ -23,14 +23,10 @@ public class OrderRepository implements IOrderDAO {
     }
 
     @Override
-    public Optional<Order> getById(int id) {
-        for (Order order : this.orders) {
-            if(order.getId() == id) {
-                return Optional.of(order);
-            }
-        }
-
-        return Optional.empty();
+    public Optional<Order> getById(final int id) {
+        return this.orders.stream()
+                .filter(o -> o.getId() == id)
+                .findFirst();
     }
 
     @Override
@@ -39,15 +35,9 @@ public class OrderRepository implements IOrderDAO {
     }
 
     @Override
-    public List<Order> getByUserId(int userId) {
-        List<Order> result = new ArrayList<>();
-
-        for (Order order : this.orders) {
-            if(order.getUserId() == userId) {
-                result.add(order);
-            }
-        }
-
-        return result;
+    public List<Order> getByUserId(final int userId) {
+        return this.orders.stream()
+                .filter(o -> o.getUserId() == userId)
+                .toList();
     }
 }

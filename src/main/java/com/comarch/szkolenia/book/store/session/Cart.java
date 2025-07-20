@@ -21,19 +21,11 @@ public class Cart {
     private final IBookDAO bookDAO;
 
     public double calculatePrice() {
-        Set<Map.Entry<Integer, Integer>> entries = this.positions.entrySet();
-        double result = 0.0;
-        for(Map.Entry<Integer, Integer> position : entries) {
-            int bookId = position.getKey();
-            int quantity = position.getValue();
-
-            Optional<Book> bookBox = this.bookDAO.getById(bookId);
-            if(bookBox.isPresent()) {
-                result += bookBox.get().getPrice() * quantity;
-            }
-        }
-
-        return result;
+        return this.positions.entrySet().stream()
+                .mapToDouble(p -> this.bookDAO.getById(p.getKey())
+                        .map(book -> book.getPrice() * p.getValue()).orElse(0.0)
+                )
+                .sum();
     }
 
     public void removePosition(int bookId) {

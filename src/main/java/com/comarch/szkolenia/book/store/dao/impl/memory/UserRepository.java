@@ -30,25 +30,17 @@ public class UserRepository implements IUserDAO {
     }
 
     @Override
-    public Optional<User> getById(int id) {
-        for(User user : this.users) {
-            if(user.getId() == id) {
-                return Optional.of(user);
-            }
-        }
-
-        return Optional.empty();
+    public Optional<User> getById(final int id) {
+        return this.users.stream()
+                .filter(u -> u.getId() == id)
+                .findFirst();
     }
 
     @Override
-    public Optional<User> getByLogin(String login) {
-        for(User user : this.users) {
-            if(user.getLogin().equals(login)) {
-                return Optional.of(user);
-            }
-        }
-
-        return Optional.empty();
+    public Optional<User> getByLogin(final String login) {
+        return this.users.stream()
+                .filter(u -> u.getLogin().equals(login))
+                .findFirst();
     }
 
     @Override
