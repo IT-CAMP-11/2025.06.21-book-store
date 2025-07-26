@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public class BookRepository implements IBookDAO {
     private final List<Book> books = new ArrayList<>();
     private final IIdSequence idSequence;
@@ -69,6 +68,11 @@ public class BookRepository implements IBookDAO {
         return this.books.stream()
                 .filter(b -> checkIfContains(b, lowerSearchTerm))
                 .toList();
+    }
+
+    @Override
+    public void update(Book book) {
+        throw new RuntimeException("Update operation is not supported in memory repository.");
     }
 
     private boolean checkIfContains(Book book, String term) {

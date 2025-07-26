@@ -31,12 +31,7 @@ public class CartService implements ICartService {
     @Override
     public void addToCart(int bookId) {
         if (this.bookDAO.getById(bookId).isPresent()) {
-            Integer quantity = this.cart.getPositions().get(bookId);
-            if (quantity == null) {
-                this.cart.getPositions().put(bookId, 1);
-            } else {
-                this.cart.getPositions().put(bookId, quantity + 1);
-            }
+            this.cart.getPositions().merge(bookId, 1, Integer::sum);
         }
     }
 

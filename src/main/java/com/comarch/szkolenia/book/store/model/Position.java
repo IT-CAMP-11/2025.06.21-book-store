@@ -8,16 +8,17 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode
-@Entity(name = "tbook")
-public class Book {
+@Entity(name = "tposition")
+public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String title;
-    private String author;
-    @Column(unique = true)
-    private String isbn;
-    private Double price;
-    private Integer quantity;
+    private int bookId;
+    private int quantity;
+    private int orderId;
+
+    public Position(int bookId, int quantity) {
+        this.bookId = bookId;
+        this.quantity = quantity;
+    }
 }
