@@ -22,17 +22,26 @@ public class UserDAO implements IUserDAO {
     private final String GET_ALL_HQL = "FROM com.comarch.szkolenia.book.store.model.User";
 
     @Override
-    public void persist(User user) {
+    public Optional<User> merge(User user) {
         Session session = this.sessionFactory.openSession();
         try {
             session.beginTransaction();
-            session.persist(user);
+
+            user.getOrders().forEach(order -> {
+                order.getPositions().forEach(position -> {
+                    position.setBook(session.merge(position.getBook()));
+                });
+            });
+
+            User actual = session.merge(user);
             session.getTransaction().commit();
+            return Optional.of(actual);
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return Optional.empty();
     }
 
     @Override

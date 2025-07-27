@@ -21,7 +21,7 @@ public class CartService implements ICartService {
     private Cart cart;
 
     @Override
-    public List<CartPosition> getCartPositions() {
+    public List<CartPosition> getPositions() {
         return this.cart.getPositions().entrySet().stream()
                 .map(this::convertToCartPosition)
                 .filter(Objects::nonNull)
@@ -29,14 +29,14 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public void addToCart(int bookId) {
-        if (this.bookDAO.getById(bookId).isPresent()) {
+    public void add(int bookId) {
+        if(this.bookDAO.getById(bookId).isPresent()) {
             this.cart.getPositions().merge(bookId, 1, Integer::sum);
         }
     }
 
     @Override
-    public void validateCart() {
+    public void validate() {
         boolean isValid = true;
         for (Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
             Optional<Book> bookBox = this.bookDAO.getById(position.getKey());
@@ -48,7 +48,7 @@ public class CartService implements ICartService {
                 isValid = false;
             }
         }
-        if (!isValid) {
+        if(!isValid) {
             throw new InvalidCartException();
         }
     }

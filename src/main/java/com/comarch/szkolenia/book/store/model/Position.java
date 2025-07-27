@@ -13,12 +13,12 @@ public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int bookId;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Book book;
     private int quantity;
-    private int orderId;
 
-    public Position(int bookId, int quantity) {
-        this.bookId = bookId;
+    public Position(Book book, int quantity) {
+        this.book = book;
         this.quantity = quantity;
     }
 }

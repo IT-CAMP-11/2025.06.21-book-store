@@ -22,9 +22,25 @@ public class Order {
     private String no;
     private String postCode;
     private String phoneNumber;
-    private int userId;
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Position> positions = new ArrayList<>();
     private Date date;
     private double price;
+
+    public String addressLine() {
+        return new StringBuilder()
+                .append("Adres: ")
+                .append("ul. ")
+                .append(this.street)
+                .append(" ")
+                .append(this.no)
+                .append(", ")
+                .append(this.city)
+                .append(" ")
+                .append(this.postCode)
+                .append(" tel. ")
+                .append(this.phoneNumber)
+                .toString();
+    }
 }
+

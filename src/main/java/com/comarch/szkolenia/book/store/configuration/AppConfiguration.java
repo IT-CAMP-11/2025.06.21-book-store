@@ -8,10 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 @Configuration
 @ComponentScan("com.comarch.szkolenia.book.store")
 public class AppConfiguration {
@@ -37,22 +33,6 @@ public class AppConfiguration {
         );
         return registrationBean;
     }
-
-    /*@Bean
-    public Connection connection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/book_store",
-                    "root",
-                    "");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println("Problem z polaczeniem do bazy !!");
-            e.printStackTrace();
-        }
-
-        return null;
-    }*/
 
     @Bean
     public SessionFactory sessionFactory() {

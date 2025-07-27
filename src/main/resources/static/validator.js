@@ -126,12 +126,31 @@ function validateLoginForm() {
 }
 
 function validateAddBookForm() {
+    var title = document.getElementById("title-field");
+    var author = document.getElementById("author-field");
     var isbn = document.getElementById("isbn-field");
+    var price = document.getElementById("price-field");
     var quantity = document.getElementById("quantity-field");
 
-    var isbnRegex = new RegExp("^97[89][- ]?83([- ]?\\d+){3}[- ]?\\d$");
+    var titleRegex = /.+/;
+    var authorRegex = /.+/;
+    var isbnRegex = /^97[89][\- ]?83([\- ]?\d+){3}[\- ]?\d$/;
 
     var result = true;
+
+    if(!titleRegex.test(title.value)) {
+        result = false;
+        title.style.background = "#fac0c0";
+    } else {
+        title.style.background = null;
+    }
+
+    if(!authorRegex.test(author.value)) {
+        result = false;
+        author.style.background = "#fac0c0";
+    } else {
+        author.style.background = null;
+    }
 
     if(!isbnRegex.test(isbn.value)) {
         result = false;
@@ -140,11 +159,19 @@ function validateAddBookForm() {
         isbn.style.background = null;
     }
 
-    if(quantity.value < 0) {
+    if(price.value <= 0 || isNaN(price.value)) {
+        result = false;
+        price.style.background = "#fac0c0";
+    } else {
+        price.style.background = null;
+    }
+
+    if(quantity.value < 0 || isNaN(quantity.value)) {
         result = false;
         quantity.style.background = "#fac0c0";
     } else {
         quantity.style.background = null;
     }
+
     return result;
 }
