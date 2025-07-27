@@ -1,7 +1,6 @@
 package com.comarch.szkolenia.book.store.session;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
-import com.comarch.szkolenia.book.store.model.Book;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,8 +8,6 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 @Component
 @SessionScope

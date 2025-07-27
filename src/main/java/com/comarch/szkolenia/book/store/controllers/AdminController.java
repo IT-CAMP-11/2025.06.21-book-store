@@ -28,9 +28,8 @@ public class AdminController {
     @PostMapping("/addBook")
     public String addBook(@ModelAttribute Book book) {
         try {
-            BookValidator.validateIsbn(book.getIsbn());
-            BookValidator.validateQuantity(book.getQuantity());
-            this.bookService.persistBook(book);
+            BookValidator.validateBook(book);
+            this.bookService.merge(book);
             return "redirect:/main";
         } catch (BookValidationException e) {
             return "redirect:/addBook";
@@ -39,7 +38,7 @@ public class AdminController {
 
     @GetMapping("/editBook/{id}")
     public String editBook(@PathVariable("id") int id, final Model model) {
-        Optional<Book> bookBox = this.bookService.getBookById(id);
+        Optional<Book> bookBox = this.bookService.getById(id);
 
         return bookBox
                 .map(b -> {
@@ -56,7 +55,8 @@ public class AdminController {
         } catch (BookValidationException e) {
             return "redirect:/editBook/" + id;
         }
-        this.bookService.updateBook(id, book);
+        book.setId(id);
+        this.bookService.merge(book);
         return "redirect:/main";
     }
 }

@@ -1,13 +1,10 @@
 package com.comarch.szkolenia.book.store.services.impl;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
-import com.comarch.szkolenia.book.store.dao.IOrderDAO;
-import com.comarch.szkolenia.book.store.dao.IPositionDAO;
-import com.comarch.szkolenia.book.store.model.Book;
+import com.comarch.szkolenia.book.store.dao.IUserDAO;
 import com.comarch.szkolenia.book.store.model.Order;
 import com.comarch.szkolenia.book.store.model.Position;
 import com.comarch.szkolenia.book.store.model.User;
-import com.comarch.szkolenia.book.store.model.view.VOrder;
 import com.comarch.szkolenia.book.store.services.IOrderService;
 import com.comarch.szkolenia.book.store.session.Cart;
 import jakarta.annotation.Resource;
@@ -21,9 +18,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class OrderService implements IOrderService {
-    private final IOrderDAO orderDAO;
     private final IBookDAO bookDAO;
-    private final IPositionDAO positionDAO;
+    private final IUserDAO userDAO;
 
     @Autowired
     HttpSession session;
@@ -32,52 +28,33 @@ public class OrderService implements IOrderService {
     private Cart cart;
 
     @Override
-    public void confirmOrder(final Order order) {
-        User user = (User) session.getAttribute("user");
-        order.setUserId(user.getId());
+    public void confirm(final Order order) {
+        int userId = ((User) session.getAttribute("user")).getId();
         order.setDate(new Date());
         order.setPrice(this.cart.calculatePrice());
         this.cart.getPositions().forEach((bookId, quantity) -> {
-            order.getPositions().add(new Position(bookId, quantity));
-            this.bookDAO.getById(bookId)
-                    .ifPresent(book -> {
+            this.bookDAO.getById(bookId).ifPresent(book -> {
+                        order.getPositions().add(new Position(book, quantity));
                         book.setQuantity(book.getQuantity() - quantity);
-                        this.bookDAO.update(book);
-                    });
+                    }
+            );
         });
-        this.orderDAO.persist(order);
-        order.getPositions().forEach(p -> {
-            p.setOrderId(order.getId());
-            this.positionDAO.persist(p);
-        });
+        Optional<User> userBox = this.userDAO.getById(userId);
+        if (userBox.isPresent()) {
+            User user = userBox.get();
+            user.getOrders().add(order);
+            this.userDAO.merge(user);
+        }
         this.cart.getPositions().clear();
     }
 
     @Override
-    public List<VOrder> getCurrentUserOrders() {
+    public List<Order> getCurrentUserOrders() {
         int userId = ((User) session.getAttribute("user")).getId();
-        return this.orderDAO.getByUserId(userId).stream()
-                .peek(o -> {
-                    List<Position> positions = this.positionDAO.getByOrderId(o.getId());
-                    o.getPositions().addAll(positions);
-                })
-                .map(this::convertToVOrder)
-                .toList();
-    }
-
-    private VOrder convertToVOrder(Order order) {
-        final VOrder vOrder = new VOrder(order);
-        order.getPositions().stream()
-                .map(this::convertToVPosition)
-                .filter(Objects::nonNull)
-                .forEach(position -> vOrder.getPositions().add(position));
-        return vOrder;
-    }
-
-    private VOrder.Position convertToVPosition(Position position) {
-        Optional<Book> bookBox = this.bookDAO.getById(position.getBookId());
-        return bookBox
-                .map(book -> new VOrder.Position(book, position.getQuantity()))
-                .orElse(null);
+        Optional<User> userBox = this.userDAO.getById(userId);
+        if (userBox.isPresent()) {
+            return userBox.get().getOrders();
+        }
+        return new ArrayList<>();
     }
 }

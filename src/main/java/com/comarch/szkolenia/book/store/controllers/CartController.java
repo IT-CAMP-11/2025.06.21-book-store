@@ -19,14 +19,14 @@ public class CartController {
 
     @GetMapping("/cart")
     public String cart(Model model) {
-        model.addAttribute("cart", this.cartService.getCartPositions());
+        model.addAttribute("cart", this.cartService.getPositions());
         model.addAttribute("cartSum", this.cart.calculatePrice());
         return "cart";
     }
 
     @GetMapping("/cart/{bookId}")
     public String addBook(@PathVariable int bookId) {
-        this.cartService.addToCart(bookId);
+        this.cartService.add(bookId);
         return "redirect:/main";
     }
 
