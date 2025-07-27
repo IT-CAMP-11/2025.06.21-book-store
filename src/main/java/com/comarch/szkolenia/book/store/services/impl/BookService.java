@@ -19,7 +19,10 @@ public class BookService implements IBookService {
     public void persistBook(final Book book) {
         this.bookDAO.findByIsbn(book.getIsbn())
                 .ifPresentOrElse(
-                        b -> b.setQuantity(b.getQuantity() + book.getQuantity()),
+                        b -> {
+                            b.setQuantity(b.getQuantity() + book.getQuantity());
+                            this.bookDAO.update(b);
+                        },
                         () -> {
                             BookValidator.validateBook(book);
                             bookDAO.persist(book);
@@ -34,15 +37,8 @@ public class BookService implements IBookService {
 
     @Override
     public void updateBook(int id, Book book) {
-        this.bookDAO.getById(id)
-                .ifPresent(b -> {
-                    b.setTitle(book.getTitle());
-                    b.setAuthor(book.getAuthor());
-                    b.setIsbn(book.getIsbn());
-                    b.setPrice(book.getPrice());
-                    b.setQuantity(book.getQuantity());
-                }
-        );
+        book.setId(id);
+        this.bookDAO.update(book);
     }
 
     @Override

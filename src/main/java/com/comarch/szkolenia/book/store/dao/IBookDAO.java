@@ -11,4 +11,5 @@ public interface IBookDAO {
     void persist(Book book);
     Optional<Book> findByIsbn(String isbn);
     List<Book> searchByTitleOrAuthor(String searchTerm);
+    void update(Book book);
 }

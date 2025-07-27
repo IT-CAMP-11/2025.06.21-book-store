@@ -2,8 +2,10 @@ package com.comarch.szkolenia.book.store.services.impl;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.dao.IOrderDAO;
+import com.comarch.szkolenia.book.store.dao.IPositionDAO;
 import com.comarch.szkolenia.book.store.model.Book;
 import com.comarch.szkolenia.book.store.model.Order;
+import com.comarch.szkolenia.book.store.model.Position;
 import com.comarch.szkolenia.book.store.model.User;
 import com.comarch.szkolenia.book.store.model.view.VOrder;
 import com.comarch.szkolenia.book.store.services.IOrderService;
@@ -21,6 +23,7 @@ import java.util.*;
 public class OrderService implements IOrderService {
     private final IOrderDAO orderDAO;
     private final IBookDAO bookDAO;
+    private final IPositionDAO positionDAO;
 
     @Autowired
     HttpSession session;
@@ -35,11 +38,18 @@ public class OrderService implements IOrderService {
         order.setDate(new Date());
         order.setPrice(this.cart.calculatePrice());
         this.cart.getPositions().forEach((bookId, quantity) -> {
-            order.getPositions().add(new Order.Position(bookId, quantity));
+            order.getPositions().add(new Position(bookId, quantity));
             this.bookDAO.getById(bookId)
-                    .ifPresent(book -> book.setQuantity(book.getQuantity() - quantity));
+                    .ifPresent(book -> {
+                        book.setQuantity(book.getQuantity() - quantity);
+                        this.bookDAO.update(book);
+                    });
         });
         this.orderDAO.persist(order);
+        order.getPositions().forEach(p -> {
+            p.setOrderId(order.getId());
+            this.positionDAO.persist(p);
+        });
         this.cart.getPositions().clear();
     }
 
@@ -47,6 +57,10 @@ public class OrderService implements IOrderService {
     public List<VOrder> getCurrentUserOrders() {
         int userId = ((User) session.getAttribute("user")).getId();
         return this.orderDAO.getByUserId(userId).stream()
+                .peek(o -> {
+                    List<Position> positions = this.positionDAO.getByOrderId(o.getId());
+                    o.getPositions().addAll(positions);
+                })
                 .map(this::convertToVOrder)
                 .toList();
     }
@@ -60,7 +74,7 @@ public class OrderService implements IOrderService {
         return vOrder;
     }
 
-    private VOrder.Position convertToVPosition(Order.Position position) {
+    private VOrder.Position convertToVPosition(Position position) {
         Optional<Book> bookBox = this.bookDAO.getById(position.getBookId());
         return bookBox
                 .map(book -> new VOrder.Position(book, position.getQuantity()))
