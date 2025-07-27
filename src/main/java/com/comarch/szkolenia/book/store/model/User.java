@@ -3,6 +3,9 @@ package com.comarch.szkolenia.book.store.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,6 +26,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(10)")
     private Role role;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
 
     public enum Role {
         USER,

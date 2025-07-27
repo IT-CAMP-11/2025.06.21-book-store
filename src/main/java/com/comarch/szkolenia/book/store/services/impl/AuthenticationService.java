@@ -27,13 +27,12 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void register(User user) {
-        if(this.userDAO.getByLogin(user.getLogin()).isPresent()) {
-            throw new LoginAlreadyExistException("Login already exists: " + user.getLogin());
-        }
-
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         user.setRole(User.Role.USER);
-        this.userDAO.persist(user);
+        this.userDAO.merge(user)
+                .orElseThrow(() ->
+                        new LoginAlreadyExistException("Login already exists: " +
+                                user.getLogin()));
     }
 
     @Override

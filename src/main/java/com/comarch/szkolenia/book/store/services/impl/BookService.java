@@ -3,7 +3,6 @@ package com.comarch.szkolenia.book.store.services.impl;
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.model.Book;
 import com.comarch.szkolenia.book.store.services.IBookService;
-import com.comarch.szkolenia.book.store.validators.BookValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,29 +15,13 @@ public class BookService implements IBookService {
     private final IBookDAO bookDAO;
 
     @Override
-    public void persistBook(final Book book) {
-        this.bookDAO.findByIsbn(book.getIsbn())
-                .ifPresentOrElse(
-                        b -> {
-                            b.setQuantity(b.getQuantity() + book.getQuantity());
-                            this.bookDAO.update(b);
-                        },
-                        () -> {
-                            BookValidator.validateBook(book);
-                            bookDAO.persist(book);
-                        }
-                );
+    public Optional<Book> merge(final Book book) {
+        return this.bookDAO.merge(book);
     }
 
     @Override
-    public Optional<Book> getBookById(int id) {
+    public Optional<Book> getById(int id) {
         return this.bookDAO.getById(id);
-    }
-
-    @Override
-    public void updateBook(int id, Book book) {
-        book.setId(id);
-        this.bookDAO.update(book);
     }
 
     @Override

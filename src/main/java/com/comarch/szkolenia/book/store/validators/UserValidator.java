@@ -13,11 +13,6 @@ public class UserValidator {
 
     public static void validatePassword(String password) {
         String regex = "^\\w{5,}$";
-
-        /*Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(password);
-        boolean result = matcher.matches();*/
-
         if(password == null || !password.matches(regex)) {
             throw new UserValidationException("Password must be at least 5 characters long and contain only letters, digits, and underscores");
         }

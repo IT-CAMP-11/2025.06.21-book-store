@@ -29,14 +29,14 @@ public class OrderController {
     public String confirm(@ModelAttribute Order order) {
         try {
             OrderValidator.validateOrder(order);
-            this.cartService.validateCart();
+            this.cartService.validate();
         } catch (OrderValidationException e) {
             return "redirect:/order";
         } catch (InvalidCartException e) {
             return "redirect:/cart";
         }
 
-        this.orderService.confirmOrder(order);
+        this.orderService.confirm(order);
         return "redirect:/orders";
     }
 

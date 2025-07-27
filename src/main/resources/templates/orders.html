@@ -31,11 +31,11 @@
                     <div class="sum">Suma</div>
                 </div>
                 <div class="inner-row" th:each="position : ${order.positions}">
-                    <div class="title" th:text="${position.title}"></div>
-                    <div class="author" th:text="${position.author}"></div>
-                    <div class="price" th:text="${position.price}"></div>
+                    <div class="title" th:text="${position.book.title}"></div>
+                    <div class="author" th:text="${position.book.author}"></div>
+                    <div class="price" th:text="${position.book.price}"></div>
                     <div class="quantity" th:text="${position.quantity}"></div>
-                    <div class="sum" th:text="${position.sum()}"></div>
+                    <div class="sum" th:text="${position.quantity * position.book.price}"></div>
                 </div>
             </div>
         </div>

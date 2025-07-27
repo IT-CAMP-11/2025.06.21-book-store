@@ -4,7 +4,6 @@ import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.model.Book;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 
 @Repository
 @RequiredArgsConstructor
@@ -50,17 +48,19 @@ public class BookDAO implements IBookDAO {
     }
 
     @Override
-    public void persist(Book book) {
+    public Optional<Book> merge(Book book) {
         Session session = this.sessionFactory.openSession();
         try {
             session.beginTransaction();
-            session.persist(book);
+            Book actual = session.merge(book);
             session.getTransaction().commit();
+            return Optional.of(actual);
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -86,19 +86,5 @@ public class BookDAO implements IBookDAO {
         List<Book> result = query.getResultList();
         session.close();
         return result;
-    }
-
-    @Override
-    public void update(Book book) {
-        Session session = this.sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.merge(book);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
     }
 }
