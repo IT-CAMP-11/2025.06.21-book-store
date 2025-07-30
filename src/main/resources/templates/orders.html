@@ -18,7 +18,7 @@
     <th:block th:each="order : ${orders}">
         <div class="big-row" onclick="showDetails(event)">
             <div th:text="${order.id}" class="id"></div>
-            <div th:text="${#dates.format(order.date, 'dd.MM.yyyy HH:mm')}" class="date"></div>
+            <div th:text="${customDateFormatter.format(order.date)}" class="date"></div>
             <div th:text="${#numbers.formatDecimal(order.price, 2, 2, 'POINT') + ' zł'}" class="price"></div>
             <div th:text="${order.positions.size()}" class="quantity"></div>
             <div class="details">

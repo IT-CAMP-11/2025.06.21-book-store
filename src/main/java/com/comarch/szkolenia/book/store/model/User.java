@@ -26,7 +26,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "varchar(10)")
     private Role role;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Order> orders = new ArrayList<>();
 
     public enum Role {

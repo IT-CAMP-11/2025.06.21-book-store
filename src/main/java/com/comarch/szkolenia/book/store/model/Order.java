@@ -3,8 +3,9 @@ package com.comarch.szkolenia.book.store.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,7 +25,7 @@ public class Order {
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Position> positions = new ArrayList<>();
-    private Date date;
+    private LocalDateTime date;
     private double price;
 
     public String addressLine() {
@@ -42,5 +43,9 @@ public class Order {
                 .append(this.phoneNumber)
                 .toString();
     }
+
+    /*public String getFormattedDate() {
+        return this.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
+    }*/
 }
 
