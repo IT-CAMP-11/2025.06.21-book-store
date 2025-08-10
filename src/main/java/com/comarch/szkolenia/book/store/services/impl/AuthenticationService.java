@@ -1,6 +1,7 @@
 package com.comarch.szkolenia.book.store.services.impl;
 
 import com.comarch.szkolenia.book.store.dao.IUserDAO;
+import com.comarch.szkolenia.book.store.dao.impl.spring.UserDAO;
 import com.comarch.szkolenia.book.store.exceptions.LoginAlreadyExistException;
 import com.comarch.szkolenia.book.store.model.User;
 import com.comarch.szkolenia.book.store.services.IAuthenticationService;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService implements IAuthenticationService {
-    private final IUserDAO userDAO;
+    private final UserDAO userDAO;
 
     @Autowired
     private HttpSession session;
@@ -29,7 +30,7 @@ public class AuthenticationService implements IAuthenticationService {
     public void register(User user) {
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         user.setRole(User.Role.USER);
-        this.userDAO.merge(user)
+        this.userDAO.saveAndReturnOptional(user)
                 .orElseThrow(() ->
                         new LoginAlreadyExistException("Login already exists: " +
                                 user.getLogin()));
@@ -37,7 +38,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void authenticate(String login, String password) {
-        Optional<User> userBox = this.userDAO.getByLogin(login);
+        Optional<User> userBox = this.userDAO.findByLogin(login);
         if(userBox.isPresent() &&
                 DigestUtils.md5DigestAsHex(password.getBytes()).equals(userBox.get().getPassword())) {
             session.setAttribute("user", userBox.get());

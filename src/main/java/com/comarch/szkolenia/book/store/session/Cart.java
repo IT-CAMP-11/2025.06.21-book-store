@@ -1,6 +1,7 @@
 package com.comarch.szkolenia.book.store.session;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
+import com.comarch.szkolenia.book.store.dao.impl.spring.BookDAO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,11 @@ import java.util.Map;
 public class Cart {
     @Getter
     private final Map<Integer, Integer> positions = new HashMap<>();
-    private final IBookDAO bookDAO;
+    private final BookDAO bookDAO;
 
     public double calculatePrice() {
         return this.positions.entrySet().stream()
-                .mapToDouble(p -> this.bookDAO.getById(p.getKey())
+                .mapToDouble(p -> this.bookDAO.findById(p.getKey())
                         .map(book -> book.getPrice() * p.getValue()).orElse(0.0)
                 )
                 .sum();

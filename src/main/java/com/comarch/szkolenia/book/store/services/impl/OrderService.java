@@ -2,6 +2,8 @@ package com.comarch.szkolenia.book.store.services.impl;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
 import com.comarch.szkolenia.book.store.dao.IUserDAO;
+import com.comarch.szkolenia.book.store.dao.impl.spring.BookDAO;
+import com.comarch.szkolenia.book.store.dao.impl.spring.UserDAO;
 import com.comarch.szkolenia.book.store.model.Order;
 import com.comarch.szkolenia.book.store.model.Position;
 import com.comarch.szkolenia.book.store.model.User;
@@ -19,8 +21,8 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class OrderService implements IOrderService {
-    private final IBookDAO bookDAO;
-    private final IUserDAO userDAO;
+    private final BookDAO bookDAO;
+    private final UserDAO userDAO;
 
     @Autowired
     HttpSession session;
@@ -34,17 +36,17 @@ public class OrderService implements IOrderService {
         order.setDate(LocalDateTime.now());
         order.setPrice(this.cart.calculatePrice());
         this.cart.getPositions().forEach((bookId, quantity) -> {
-            this.bookDAO.getById(bookId).ifPresent(book -> {
+            this.bookDAO.findById(bookId).ifPresent(book -> {
                         order.getPositions().add(new Position(book, quantity));
                         book.setQuantity(book.getQuantity() - quantity);
                     }
             );
         });
-        Optional<User> userBox = this.userDAO.getById(userId);
+        Optional<User> userBox = this.userDAO.findById(userId);
         if (userBox.isPresent()) {
             User user = userBox.get();
             user.getOrders().add(order);
-            this.userDAO.merge(user);
+            this.userDAO.save(user);
         }
         this.cart.getPositions().clear();
     }
@@ -52,7 +54,7 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> getCurrentUserOrders() {
         int userId = ((User) session.getAttribute("user")).getId();
-        Optional<User> userBox = this.userDAO.getById(userId);
+        Optional<User> userBox = this.userDAO.findById(userId);
         if (userBox.isPresent()) {
             return userBox.get().getOrders();
         }

@@ -1,6 +1,7 @@
 package com.comarch.szkolenia.book.store.services.impl;
 
 import com.comarch.szkolenia.book.store.dao.IBookDAO;
+import com.comarch.szkolenia.book.store.dao.impl.spring.BookDAO;
 import com.comarch.szkolenia.book.store.exceptions.InvalidCartException;
 import com.comarch.szkolenia.book.store.model.Book;
 import com.comarch.szkolenia.book.store.model.view.CartPosition;
@@ -15,7 +16,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class CartService implements ICartService {
-    private final IBookDAO bookDAO;
+    private final BookDAO bookDAO;
 
     @Resource
     private Cart cart;
@@ -30,7 +31,7 @@ public class CartService implements ICartService {
 
     @Override
     public void add(int bookId) {
-        if(this.bookDAO.getById(bookId).isPresent()) {
+        if(this.bookDAO.findById(bookId).isPresent()) {
             this.cart.getPositions().merge(bookId, 1, Integer::sum);
         }
     }
@@ -39,7 +40,7 @@ public class CartService implements ICartService {
     public void validate() {
         boolean isValid = true;
         for (Map.Entry<Integer, Integer> position : this.cart.getPositions().entrySet()) {
-            Optional<Book> bookBox = this.bookDAO.getById(position.getKey());
+            Optional<Book> bookBox = this.bookDAO.findById(position.getKey());
             if (bookBox.isEmpty()) {
                 this.cart.removePosition(position.getKey());
                 isValid = false;
@@ -54,7 +55,7 @@ public class CartService implements ICartService {
     }
 
     private CartPosition convertToCartPosition(Map.Entry<Integer, Integer> position) {
-        Optional<Book> bookBox = this.bookDAO.getById(position.getKey());
+        Optional<Book> bookBox = this.bookDAO.findById(position.getKey());
         if (bookBox.isPresent()) {
             Book book = bookBox.get();
             return new CartPosition(book.getId(), book.getTitle(), book.getAuthor(),

@@ -3,7 +3,6 @@ package com.comarch.szkolenia.book.store.configuration;
 import com.comarch.szkolenia.book.store.filters.AdminFilter;
 import com.comarch.szkolenia.book.store.filters.LoginFilter;
 import com.comarch.szkolenia.book.store.thymeleaf.CustomDateFormatter;
-import org.hibernate.SessionFactory;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -37,11 +36,6 @@ public class AppConfiguration {
             "/confirm"
         );
         return registrationBean;
-    }
-
-    @Bean
-    public SessionFactory sessionFactory() {
-        return new org.hibernate.cfg.Configuration().configure().buildSessionFactory();
     }
 
     @Bean

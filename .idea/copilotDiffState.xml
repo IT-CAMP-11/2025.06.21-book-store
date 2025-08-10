@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/App.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/App.java" />
+              <option name="originalContent" value="package com.comarch.szkolenia.book.store;&#10;&#10;import com.comarch.szkolenia.book.store.configuration.AppConfiguration;&#10;import org.springframework.boot.SpringApplication;&#10;import org.springframework.boot.autoconfigure.SpringBootApplication;&#10;import org.springframework.scheduling.annotation.EnableScheduling;&#10;&#10;@SpringBootApplication&#10;@EnableScheduling&#10;public class App {&#10;    public static void main(String[] args) {&#10;        SpringApplication.run(AppConfiguration.class, args);&#10;    }&#10;}&#10;" />
+              <option name="updatedContent" value="package com.comarch.szkolenia.book.store;&#10;&#10;import org.springframework.boot.SpringApplication;&#10;import org.springframework.boot.autoconfigure.SpringBootApplication;&#10;import org.springframework.scheduling.annotation.EnableScheduling;&#10;&#10;@SpringBootApplication&#10;@EnableScheduling&#10;public class App {&#10;    public static void main(String[] args) {&#10;        SpringApplication.run(App.class, args);&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/dao/impl/spring/BookDAO.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/dao/impl/spring/BookDAO.java" />
+              <option name="originalContent" value="package com.comarch.szkolenia.book.store.dao.impl.spring;&#10;&#10;public interface BookDAO {&#10;}&#10;" />
+              <option name="updatedContent" value="package com.comarch.szkolenia.book.store.dao.impl.spring;&#10;&#10;import com.comarch.szkolenia.book.store.model.Book;&#10;import org.springframework.data.jpa.repository.JpaRepository;&#10;import org.springframework.data.jpa.repository.Query;&#10;import org.springframework.data.repository.query.Param;&#10;import org.springframework.stereotype.Repository;&#10;&#10;import java.util.List;&#10;import java.util.Optional;&#10;&#10;@Repository&#10;public interface BookDAO extends JpaRepository&lt;Book, Integer&gt; {&#10;    &#10;    // getById(int id) - dziedziczone z JpaRepository jako findById(Integer id)&#10;    // getAll() - dziedziczone z JpaRepository jako findAll()&#10;    // merge(Book book) - dziedziczone z JpaRepository jako save(Book book)&#10;    &#10;    Optional&lt;Book&gt; findByIsbn(String isbn);&#10;    &#10;    @Query(&quot;SELECT b FROM tbook b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(b.author) LIKE LOWER(CONCAT('%', :searchTerm, '%'))&quot;)&#10;    List&lt;Book&gt; findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(@Param(&quot;searchTerm&quot;) String searchTerm);&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/dao/impl/spring/UserDAO.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/comarch/szkolenia/book/store/dao/impl/spring/UserDAO.java" />
+              <option name="originalContent" value="package com.comarch.szkolenia.book.store.dao.impl.spring;&#10;&#10;import com.comarch.szkolenia.book.store.model.User;&#10;import org.springframework.data.jpa.repository.JpaRepository;&#10;&#10;import java.util.Optional;&#10;&#10;public interface UserDAO extends JpaRepository&lt;User, Integer&gt; {&#10;    Optional&lt;User&gt; findByLogin(String login);&#10;}&#10;" />
+              <option name="updatedContent" value="package com.comarch.szkolenia.book.store.dao.impl.spring;&#10;&#10;import com.comarch.szkolenia.book.store.model.User;&#10;import org.springframework.data.jpa.repository.JpaRepository;&#10;&#10;import java.util.Optional;&#10;&#10;public interface UserDAO extends JpaRepository&lt;User, Integer&gt; {&#10;    Optional&lt;User&gt; findByLogin(String login);&#10;&#10;    // Nadpisanie metody save aby zwracała Optional&lt;User&gt;&#10;    default Optional&lt;User&gt; saveAndReturnOptional(User user) {&#10;        try {&#10;            User savedUser = save(user);&#10;            return Optional.ofNullable(savedUser);&#10;        } catch (Exception e) {&#10;            return Optional.empty();&#10;        }&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/main/resources/application.properties">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/resources/application.properties" />
+              <option name="originalContent" value="server.port=8080" />
+              <option name="updatedContent" value="server.port=8080&#10;&#10;# Database configuration&#10;spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver&#10;spring.datasource.url=jdbc:mysql://localhost:3306/book_store3&#10;spring.datasource.username=root&#10;spring.datasource.password=&#10;&#10;# JPA/Hibernate configuration&#10;spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect&#10;spring.jpa.hibernate.ddl-auto=validate&#10;spring.jpa.show-sql=true&#10;&#10;# Connection pool configuration&#10;spring.datasource.hikari.maximum-pool-size=20" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
