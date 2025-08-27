@@ -1,6 +1,5 @@
 package com.comarch.szkolenia.book.store.services.impl;
 
-import com.comarch.szkolenia.book.store.dao.IUserDAO;
 import com.comarch.szkolenia.book.store.dao.impl.spring.UserDAO;
 import com.comarch.szkolenia.book.store.exceptions.LoginAlreadyExistException;
 import com.comarch.szkolenia.book.store.model.User;
@@ -27,10 +26,10 @@ public class AuthenticationService implements IAuthenticationService {
     private Cart cart;
 
     @Override
-    public void register(User user) {
+    public User register(User user) {
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         user.setRole(User.Role.USER);
-        this.userDAO.saveAndReturnOptional(user)
+        return this.userDAO.saveAndReturnOptional(user)
                 .orElseThrow(() ->
                         new LoginAlreadyExistException("Login already exists: " +
                                 user.getLogin()));

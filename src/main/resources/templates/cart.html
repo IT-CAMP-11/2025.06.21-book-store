@@ -3,6 +3,7 @@
 <head>
     <th:block th:replace="~{fragments.html :: headers}"></th:block>
     <link rel="stylesheet" href="cart.css">
+    <script src="/cart.js"></script>
 </head>
 <body>
 <div th:replace="~{fragments.html :: logo}"></div>
@@ -27,9 +28,9 @@
                 <td th:text="${#numbers.formatDecimal(position.price, 2, 2, 'POINT') + ' zł'}" class="price"></td>
                 <td th:text="${#numbers.formatDecimal(position.getSum(), 2, 2, 'POINT') + ' zł'}" class="sum"></td>
                 <td class="actions">
-                    <a th:href="@{/cart/remove/{id}(id=${position.bookId})}" class="delete-btn">
+                    <div th:onclick="'removeFromCart(' + ${position.bookId} + ')'" class="delete-btn">
                         <img src="/delete.png" alt="Usuń" class="delete-icon">
-                    </a>
+                    </div>
                 </td>
             </tr>
         <tr>

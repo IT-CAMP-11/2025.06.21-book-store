@@ -23,16 +23,4 @@ public class CartController {
         model.addAttribute("cartSum", this.cart.calculatePrice());
         return "cart";
     }
-
-    @GetMapping("/cart/{bookId}")
-    public String addBook(@PathVariable int bookId) {
-        this.cartService.add(bookId);
-        return "redirect:/main";
-    }
-
-    @GetMapping("/cart/remove/{bookId}")
-    public String removeFromCart(@PathVariable int bookId) {
-        this.cart.removePosition(bookId);
-        return "redirect:/cart";
-    }
 }

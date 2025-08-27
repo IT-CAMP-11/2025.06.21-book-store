@@ -1,10 +1,11 @@
 package com.comarch.szkolenia.book.store.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,11 @@ public class Order {
     private String postCode;
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private final List<Position> positions = new ArrayList<>();
+    @Transient
+    @JsonProperty("positions")
+    private String positionsRef;
     private LocalDateTime date;
     private double price;
 
@@ -44,8 +49,11 @@ public class Order {
                 .toString();
     }
 
-    /*public String getFormattedDate() {
-        return this.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
-    }*/
+    public String getPositionsRef() {
+        if(this.positionsRef == null) {
+            this.positionsRef = "http://localhost:8080/rest/api/v1/position?orderId=" + this.id;
+        }
+        return this.positionsRef;
+    }
 }
 

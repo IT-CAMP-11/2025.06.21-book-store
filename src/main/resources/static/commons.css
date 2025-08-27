@@ -54,3 +54,38 @@
     border: 2px solid #F53330;
     background: #29A6A850;
 }
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid;
+    background: white;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease-in-out;
+    max-width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification.success {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.notification.error {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
