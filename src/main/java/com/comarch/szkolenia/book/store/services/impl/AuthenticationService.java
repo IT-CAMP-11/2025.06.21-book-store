@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -24,6 +25,9 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Resource
     private Cart cart;
+
+    /*@Value("${test.mode}")
+    private boolean testMode;*/
 
     @Override
     public User register(User user) {
